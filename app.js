@@ -9,7 +9,7 @@ app.use(cors());
 app.use(express.json());
 app.use(methodeOverride('_method'));
 app.use(express.static('public'))
-// this is change i will look on aws
+
 app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader(

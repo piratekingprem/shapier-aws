@@ -32,6 +32,7 @@
     "passport-facebook": "^3.0.0",
     "passport-google-oauth20": "^2.0.0",
     "passport-linkedin-oauth2": "^2.0.0",
+    "razorpay": "^2.9.4",
     "util": "^0.12.5"
   }
 }

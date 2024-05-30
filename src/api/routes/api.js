@@ -16,8 +16,8 @@ const product_category = require('../controllers/product_categories');
 const product_brand = require('../controllers/product_brand');
 const assest = require('../controllers/assest');
 const cart = require('../controllers/cart')
-
-
+const paymentCheckout = require('../controllers/paymentCheckout');
+const subCategories = require('../controllers/subCategories');
 // APP_VALIDATION
 const userValidation = require('../validations/usersValidation')
 
@@ -49,10 +49,10 @@ router.delete('/product/:id',product.delete_product);
 
 // PRODUCT_CATEGORIES API
 router.get('/product_categories',product_category.get_product_categories);
-router.get('/product/:id',product_category.get_product_category_by_id);
+router.get('/product_categories/:id',product_category.get_product_category_by_id);
 router.post('/product_categories',product_category.store_product_categories);
-router.put('/product/:id',product_category.update_product_category);
-router.delete('/product/:id',product_category.delete_product_category);
+router.put('/product_categories/:id',product_category.update_product_category);
+router.delete('/product_categories/:id',product_category.delete_product_category);
 
 // PRODUCT_BRANDS API
 router.get('/product_brand',product_brand.get_brand);
@@ -73,6 +73,15 @@ router.get('/cart_by_userid/:userId',verify,cart.get_by_cart_user_id);
 router.get('/cart/:id',verify,cart.get_by_cart_id);
 router.put('/cart/:id',cart.update_cart);
 router.delete('/cart/:id',cart.delete_cart);
+
+// Order
+router.post('/checkout', paymentCheckout.checkout);
+
+// subcategories
+router.get('/subcategories',subCategories.get);
+router.get('/subcategories/:id',subCategories.get_by_id)
+router.post('/subcategories',subCategories.store);
+
 
 
 module.exports = router;

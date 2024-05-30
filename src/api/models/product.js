@@ -15,8 +15,6 @@ exports.store_product = async (file,params) => {
     const product = await db.query(
       `INSERT INTO product(product,product_image, product_price, product_description, product_category_id) VALUES (?,?,?,?,?)`,[ params.product,image,params.product_price,params.product_description,params.product_category_id]
     );
-    console.log(assest)
-    console.log(product)
     message = "Error in creating product", code = 400, data = {};
     if (product.affectedRows) {
       (message = "Product is created successfully"),

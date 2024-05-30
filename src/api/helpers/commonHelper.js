@@ -2,6 +2,9 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 const filesDir = "./public/images";
+const Razorpay = require("razorpay");
+require('dotenv').config();
+
 fs.mkdir(filesDir, { recursive: true }, (err) => {
     if (err) throw err;
 });
@@ -26,4 +29,9 @@ const multerStorage = multer.diskStorage({
 
 const upload = multer({storage: multerStorage });
 
-module.exports = { upload }
+const instance = new Razorpay({
+    key_id: process.env.RAZORPAY_API_KEY,
+    key_secret: process.env.RAZORPAY_API_SECRET
+})
+
+module.exports = { upload,instance }
