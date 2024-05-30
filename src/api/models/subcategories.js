@@ -57,3 +57,21 @@ exports.get_subcategory_by_id = async () => {
     return {message,code,data};
 }
 
+exports.get_subcategory_by_category_name = async (category_name) => {
+    let message = "Something went wrong",code = 500, data = []
+    try {
+        const subcategories = await db.query(
+            `SELECT subcategories.*, product_categories.product_category_name from subcategories
+            LEFT JOIN product_categories ON subcategories.category_id = product_categories.id WHERE product_category_name = ? ORDER By subcategories.created_at ASC`,[category_name]
+        )
+        message="No subcategory found",code = 400, data = [];
+        if(subcategories.length){
+            message= "Subcategories is fetched",
+            code=200,
+            data=subcategories
+        }
+    } catch (error) {
+        message=error;
+    }
+    return {message,code,data}
+}

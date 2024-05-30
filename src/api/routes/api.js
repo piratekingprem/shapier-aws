@@ -80,8 +80,7 @@ router.post('/checkout', paymentCheckout.checkout);
 // subcategories
 router.get('/subcategories',subCategories.get);
 router.get('/subcategories/:id',subCategories.get_by_id)
+router.get('/subcategories/category_name/:category_name',subCategories.get_by_category_name);
 router.post('/subcategories',subCategories.store);
-
-
 
 module.exports = router;
