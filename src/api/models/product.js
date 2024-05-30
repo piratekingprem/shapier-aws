@@ -1,21 +1,36 @@
 const db = require("../../config/db");
 
-exports.store_product = async (file,params) => {
-  let message = "Something went wrong", code = 500,data = [];
-    var image = null;
-    var assests_for = 'product';
-    if(file){
-      image = file.filename
-    }
+exports.store_product = async (file, params) => {
+  let message = "Something went wrong",
+    code = 500,
+    data = [];
+  var image = null;
+  var discount = params.discount ?? null;
+  var vandor_name = params.vandor_name ?? null;
+  var assests_for = "product";
+  if (file) {
+    image = file.filename;
+  }
 
   try {
     const assest = await db.query(
-      `INSERT INTO assests(assests_image,assest_for) VALUES (?,?)`,[image,assests_for]
+      `INSERT INTO assests(assests_image,assest_for) VALUES (?,?)`,
+      [image, assests_for]
     );
     const product = await db.query(
-      `INSERT INTO product(product,product_image, product_price, product_description, product_category_id) VALUES (?,?,?,?,?)`,[ params.product,image,params.product_price,params.product_description,params.product_category_id]
+      `INSERT INTO product(product,product_image,product_description, product_price,stock,vandor_name,discount,subcategory_id) VALUES (?,?,?,?,?,?,?,?)`,
+      [
+        params.product,
+        image,
+        params.product_description,
+        params.product_price,
+        params.stock,
+        vandor_name,
+        discount,
+        params.subcategory_id,
+      ]
     );
-    message = "Error in creating product", code = 400, data = {};
+    (message = "Error in creating product"), (code = 400), (data = {});
     if (product.affectedRows) {
       (message = "Product is created successfully"),
         (code = 201),
@@ -35,8 +50,9 @@ exports.get_product = async () => {
   try {
     const product = await db.query(
       `
-            SELECT product.*, product_categories.product_category_name from product
-            LEFT JOIN product_categories ON product.product_category_id = product_categories.id ORDER BY product.created_at DESC`, []
+            SELECT product.*, subcategories.subcategory_name from product
+            LEFT JOIN subcategories ON product.subcategory_id = subcategories.subcategory_id ORDER BY product.created_at DESC`,
+      []
     );
     (message = "No Product Found"), (code = 400), (data = []);
     if (product.length) {
@@ -58,29 +74,40 @@ exports.get_product_by_id = async (id) => {
   try {
     const product = await db.query(`SELECT * from product WHERE id = ?`, [id]);
     (message = "Error in fetching the product"), (code = 400), (data = []);
-    if(product.length){
-      message = 'Product fetched successfully';
+    if (product.length) {
+      message = "Product fetched successfully";
       code = 200;
-      data = product
+      data = product;
     }
   } catch (error) {
     message = error;
   }
 
-  return {message,code,data};
+  return { message, code, data };
 };
-exports.update_product = async (id,params) => {
+exports.update_product = async (id, file, params) => {
   let message = "Something went wrong",
     code = 500,
     data = [];
+  var image = null;
+  var discount = params.discount ?? null;
+  var vandor_name = params.vandor_name ?? null;
+  var assests_for = "product";
+  if (file) {
+    image = file.filename;
+  }
   try {
     const product = await db.query(
-      `UPDATE product SET product = ?, product_price = ?, product_description = ? , product_category_id = ? WHERE id = ${id}`,
+      `UPDATE product SET product = ?,product_image = ?, product_description = ?, product_price = ?,stock = ?,vandor_name = ?,discount = ?,subcategory_id  = ? WHERE id = ${id}`,
       [
         params.product,
-        params.product_price,
+        image,
         params.product_description,
-        params.product_category_id,
+        params.product_price,
+        params.stock,
+        vandor_name,
+        discount,
+        params.subcategory_id,
       ]
     );
 
@@ -103,10 +130,7 @@ exports.delete_product = async (id) => {
     code = 500,
     data = [];
   try {
-    const product = await db.query(
-      `DELETE FROM product WHERE id = ${id}`,
-      []
-    );
+    const product = await db.query(`DELETE FROM product WHERE id = ${id}`, []);
     (message = "Error in updating the product"), (code = 400), (data = []);
     if (product.affectedRows) {
       (message = "The product is been deleted successfully"),

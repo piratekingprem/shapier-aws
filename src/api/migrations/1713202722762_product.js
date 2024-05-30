@@ -6,6 +6,8 @@ module.exports = {
         product_description TEXT NULL,
         product_price DECIMAL(10, 2) NULL,
         stock INT,
+        vandor_name varchar(225) NULL,
+        discount INT,
         subcategory_id INT,
         created_at timestamp DEFAULT CURRENT_TIMESTAMP,
         updated_at timestamp ON UPDATE CURRENT_TIMESTAMP
