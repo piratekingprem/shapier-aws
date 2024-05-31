@@ -85,6 +85,26 @@ exports.get_product_by_id = async (id) => {
 
   return { message, code, data };
 };
+
+exports.get_product_by_subcategory_id = async (subcategory_id) => {
+  let message = "Something went wrong",
+  code = 500,
+  data = [];
+  try {
+    const product = await db.query(`SELECT product.*, subcategories.subcategory_name from product
+    LEFT JOIN subcategories ON product.subcategory_id = subcategories.subcategory_id WHERE product.subcategory_id = ? ORDER BY product.created_at DESC`, [subcategory_id]);
+    (message = "Error in fetching the product"), (code = 400), (data =[])
+    if (product.length) {
+      message = "Product fetched successfully";
+      code = 200;
+      data = product
+    }
+  } catch (error) {
+    message = error
+  }
+
+  return {message,code,data};
+}
 exports.update_product = async (id, file, params) => {
   let message = "Something went wrong",
     code = 500,
