@@ -36,5 +36,3 @@ exports.get_by_category_name = async (req,res,next)=> {
         next(error);
     }
 }
-
-// console.log(subcategories.get_subcategory_by_category_name)
