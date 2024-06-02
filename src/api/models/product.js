@@ -12,7 +12,7 @@ exports.store_product = async (file, params) => {
   let product_price = params.product_price ?? 0;
   let sale_price = product_price * (1 - discount / 100); // Calculate the sale price after discount
   let minimum_qauntity = params.minimum_qauntity ?? 1;
-
+  let brand_id = params.brand_id ?? null;
   try {
     const assest = await db.query(
       `INSERT INTO assests(assests_image, assest_for) VALUES (?, ?)`,
@@ -20,11 +20,11 @@ exports.store_product = async (file, params) => {
     );
 
     if (!assest.affectedRows) {
-      throw new Error('Error in inserting asset');
+      throw new Error("Error in inserting asset");
     }
 
     const product = await db.query(
-      `INSERT INTO product(product, product_image, product_description, product_price, stock, vandor_name, discount, subcategory_id, sale_price, minimum_qauntity, per_base) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      `INSERT INTO product(product, product_image, product_description, product_price, stock, vandor_name, discount, subcategory_id, sale_price, minimum_qauntity, per_base, brand_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [
         params.product,
         image,
@@ -36,18 +36,18 @@ exports.store_product = async (file, params) => {
         params.subcategory_id,
         sale_price,
         minimum_qauntity,
-        params.per_base
+        params.per_base,
+        brand_id
       ]
     );
 
     if (!product.affectedRows) {
-      throw new Error('Error in creating product');
+      throw new Error("Error in creating product");
     }
 
     message = "Product is created successfully";
     code = 201;
     data = product;
-
   } catch (error) {
     message = error.message || error;
     code = 400;
@@ -57,7 +57,6 @@ exports.store_product = async (file, params) => {
   return { message, code, data };
 };
 
-
 exports.get_product = async () => {
   let message = "Something went wrong",
     code = 500,
@@ -65,8 +64,10 @@ exports.get_product = async () => {
   try {
     const product = await db.query(
       `
-            SELECT product.*, subcategories.subcategory_name from product
-            LEFT JOIN subcategories ON product.subcategory_id = subcategories.subcategory_id ORDER BY product.created_at DESC`,
+            SELECT product.*, subcategories.subcategory_name, product_brands.product_brand_name from product
+            LEFT JOIN subcategories ON product.subcategory_id = subcategories.subcategory_id 
+            LEFT JOIN product_brands ON product.brand_id = product_brands.id
+            ORDER BY product.created_at DESC`,
       []
     );
     (message = "No Product Found"), (code = 400), (data = []);
@@ -103,22 +104,51 @@ exports.get_product_by_id = async (id) => {
 
 exports.get_product_by_subcategory_id = async (subcategory_id) => {
   let message = "Something went wrong",
-  code = 500,
-  data = [];
+    code = 500,
+    data = [];
   try {
-    const product = await db.query(`SELECT product.*, subcategories.subcategory_name from product
-    LEFT JOIN subcategories ON product.subcategory_id = subcategories.subcategory_id WHERE product.subcategory_id = ? ORDER BY product.created_at DESC`, [subcategory_id]);
-    (message = "Error in fetching the product"), (code = 400), (data =[])
+    const product = await db.query(
+      `SELECT product.*, subcategories.subcategory_name from product
+    LEFT JOIN subcategories ON product.subcategory_id = subcategories.subcategory_id WHERE product.subcategory_id = ? ORDER BY product.created_at DESC`,
+      [subcategory_id]
+    );
+    (message = "Error in fetching the product"), (code = 400), (data = []);
     if (product.length) {
       message = "Product fetched successfully";
       code = 200;
-      data = product
+      data = product;
     }
   } catch (error) {
-    message = error
+    message = error;
   }
 
-  return {message,code,data};
+  return { message, code, data };
+};
+
+exports.get_product_by_brands = async (brand_id) => {
+  let message = "Something went wrong",
+  code = 500,
+  data = [];
+  try {
+    const product = await db.query(
+      `  SELECT product.*, subcategories.subcategory_name, product_brands.product_brand_name from product
+      LEFT JOIN subcategories ON product.subcategory_id = subcategories.subcategory_id 
+      LEFT JOIN product_brands ON product.brand_id = product_brands.id
+      WHERE product.brand_id = ?
+      ORDER BY product.created_at DESC`,
+      [brand_id]
+    );
+    (message = "Error in fetching the product"), (code = 400), (data = []);
+    if (product.length) {
+      message = "Product fetched successfully";
+      code = 200;
+      data = product;
+    }
+  } catch (error) {
+    message = error;
+  }
+
+  return {message,code,data}
 }
 exports.update_product = async (id, file, params) => {
   let message = "Something went wrong",
