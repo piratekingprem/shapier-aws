@@ -4,44 +4,59 @@ exports.store_product = async (file, params) => {
   let message = "Something went wrong",
     code = 500,
     data = [];
-  var image = null;
-  var discount = params.discount ?? null;
-  var vandor_name = params.vandor_name ?? null;
-  var assests_for = "product";
-  if (file) {
-    image = file.filename;
-  }
+
+  let image = file ? file.filename : null;
+  let discount = params.discount ?? 0; // Assuming discount is a percentage
+  let vandor_name = params.vandor_name ?? null;
+  let assests_for = "product";
+  let product_price = params.product_price ?? 0;
+  let sale_price = product_price * (1 - discount / 100); // Calculate the sale price after discount
+  let minimum_qauntity = params.minimum_qauntity ?? 1;
 
   try {
     const assest = await db.query(
-      `INSERT INTO assests(assests_image,assest_for) VALUES (?,?)`,
+      `INSERT INTO assests(assests_image, assest_for) VALUES (?, ?)`,
       [image, assests_for]
     );
+
+    if (!assest.affectedRows) {
+      throw new Error('Error in inserting asset');
+    }
+
     const product = await db.query(
-      `INSERT INTO product(product,product_image,product_description, product_price,stock,vandor_name,discount,subcategory_id) VALUES (?,?,?,?,?,?,?,?)`,
+      `INSERT INTO product(product, product_image, product_description, product_price, stock, vandor_name, discount, subcategory_id, sale_price, minimum_qauntity, per_base) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [
         params.product,
         image,
         params.product_description,
-        params.product_price,
+        product_price,
         params.stock,
         vandor_name,
         discount,
         params.subcategory_id,
+        sale_price,
+        minimum_qauntity,
+        params.per_base
       ]
     );
-    (message = "Error in creating product"), (code = 400), (data = {});
-    if (product.affectedRows) {
-      (message = "Product is created successfully"),
-        (code = 201),
-        (data = product);
+
+    if (!product.affectedRows) {
+      throw new Error('Error in creating product');
     }
+
+    message = "Product is created successfully";
+    code = 201;
+    data = product;
+
   } catch (error) {
-    message = error;
+    message = error.message || error;
+    code = 400;
+    data = {};
   }
 
   return { message, code, data };
 };
+
 
 exports.get_product = async () => {
   let message = "Something went wrong",

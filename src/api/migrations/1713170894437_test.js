@@ -1,6 +1,7 @@
 module.exports = {
     "up": `CREATE TABLE IF NOT EXISTS test(
         id INT AUTO_INCREMENT primary key,
+        kite varchar(36) NULL,
         tester_name varchar(36) Null,
         created_at timestamp DEFAULT CURRENT_TIMESTAMP,
         updated_at timestamp ON UPDATE CURRENT_TIMESTAMP
