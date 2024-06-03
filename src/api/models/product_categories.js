@@ -1,13 +1,24 @@
 const db = require("../../config/db");
 
-exports.store_product_categories = async (params) => {
+exports.store_product_categories = async (file, params) => {
   let message = "Something went wrong",
     code = 500,
     data = [];
+  let image = file ? file.filename : null;
+  let assests_for = "category";
   try {
+    const assest = await db.query(
+      `INSERT INTO assests(assests_image, assest_for) VALUES (?, ?)`,
+      [image, assests_for]
+    );
+
+    if (!assest.affectedRows) {
+      throw new Error("Error in inserting asset");
+    }
+
     const product_categories = await db.query(
-      `INSERT INTO product_categories(product_category_name) VALUES (?)`,
-      [params.product_category_name]
+      `INSERT INTO product_categories(product_category_name,product_category_image) VALUES (?,?)`,
+      [params.product_category_name, image]
     );
     (message = "Error in creating the product category"),
       (code = 400),

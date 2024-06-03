@@ -52,7 +52,7 @@ router.delete('/product/:id',product.delete_product);
 // PRODUCT_CATEGORIES API
 router.get('/product_categories',product_category.get_product_categories);
 router.get('/product_categories/:id',product_category.get_product_category_by_id);
-router.post('/product_categories',product_category.store_product_categories);
+router.post('/product_categories',upload.single('product_category_image'),product_category.store_product_categories);
 router.put('/product_categories/:id',product_category.update_product_category);
 router.delete('/product_categories/:id',product_category.delete_product_category);
 

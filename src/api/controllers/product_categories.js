@@ -11,7 +11,7 @@ exports.get_product_categories = async (req,res,next) =>{
 
 exports.store_product_categories = async (req,res,next) =>{
     try {
-        const product_categories = await product_category.store_product_categories(req.body);
+        const product_categories = await product_category.store_product_categories(req.file,req.body);
         return res.send(product_categories)
     } catch (error) {
         next(error)
