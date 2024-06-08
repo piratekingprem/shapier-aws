@@ -18,6 +18,7 @@ const assest = require('../controllers/assest');
 const cart = require('../controllers/cart')
 const paymentCheckout = require('../controllers/paymentCheckout');
 const subCategories = require('../controllers/subCategories');
+const service = require('../controllers/service');
 // APP_VALIDATION
 const userValidation = require('../validations/usersValidation')
 
@@ -84,5 +85,10 @@ router.get('/subcategories',subCategories.get);
 router.get('/subcategories/:id',subCategories.get_by_id)
 router.get('/subcategories/category_name/:category_name',subCategories.get_by_category_name);
 router.post('/subcategories',subCategories.store);
+
+// SERVICE
+router.post('/service',service.store);
+router.get('/service',service.get);
+router.get('/service/:id',service.get_by_id);
 
 module.exports = router;
