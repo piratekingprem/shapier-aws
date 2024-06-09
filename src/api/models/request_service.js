@@ -18,7 +18,7 @@ exports.store = async (params) => {
       ]
     );
     (message = "Error in creating request_service"), (code = 400), (data = []);
-    if (request_service) {
+    if (request_service.affectedRows) {
       (message = "Successfully created the service"),
         (code = 201),
         (data = request_service);
