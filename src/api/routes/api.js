@@ -20,6 +20,7 @@ const paymentCheckout = require('../controllers/paymentCheckout');
 const subCategories = require('../controllers/subCategories');
 const service = require('../controllers/service');
 const request_service = require('../controllers/request_service');
+const banner = require('../controllers/banners');
 
 // APP_VALIDATION
 const userValidation = require('../validations/usersValidation')
@@ -97,5 +98,11 @@ router.get('/service/:id',service.get_by_id);
 router.post('/request_service',request_service.store_request_service);
 router.get('/request_service',request_service.get_request_service);
 router.get('/request_service/:id',request_service.get_by_id_request_service);
+
+// BANNERS
+router.post('/banner',upload.single('banner_image'),banner.store_banners);
+router.get('/banner',banner.get_banners);
+router.get('/banner/:banner_category',banner.get_banners_by_banner_category);
+router.get('/banner/:id',banner.get_banners_by_id);
 
 module.exports = router;
