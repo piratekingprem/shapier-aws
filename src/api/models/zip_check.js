@@ -35,19 +35,20 @@ exports.get = async () => {
     return {message,code,data};
 }
 exports.check_zip = async (zip) => {
-    let message = "Something is wrong", code = 500, data = [];
+    let message = "Something is wrong", code = 500, data = [],availbility = 0;
     try {
         const zips = await db.query(
             `SELECT * FROM zip_check WHERE zip = ${zip}`,[]
         );
-        message = "NO zip code found", code = 404, data = [];
+        message = "NO zip code found", code = 404, data = [],availbility = 0;
         if(zips.length){
             message = "Zip fetched successfully",
             code = 200,
-            data = zips
+            data = zips,
+            availbility = 1
         }
     } catch (error) {
         message = error;
     }
-    return {message,code,data};
+    return {message,code,data,availbility};
 }

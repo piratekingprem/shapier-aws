@@ -1,9 +1,9 @@
 const db = require("../../config/db");
 
 exports.store_service = async (file, params) => {
-  let message = "Something went wrong",
-    code = 500,
-    data = [];
+    let message = "Something went wrong",
+      code = 500,
+      data = [];
 
   let image = file ? file.filename : null;
   try {
