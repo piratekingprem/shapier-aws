@@ -2,7 +2,7 @@ const serviceModel  = require('../models/service');
 
 exports.store = async (req,res,next) => {
     try {
-        const service = await serviceModel.store_service(req.body);
+        const service = await serviceModel.store_service(req.file,req.body);
         return res.send(service);
     } catch (error) {
         next(error);   

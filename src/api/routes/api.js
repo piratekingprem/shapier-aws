@@ -19,6 +19,8 @@ const cart = require('../controllers/cart')
 const paymentCheckout = require('../controllers/paymentCheckout');
 const subCategories = require('../controllers/subCategories');
 const service = require('../controllers/service');
+const request_service = require('../controllers/request_service');
+
 // APP_VALIDATION
 const userValidation = require('../validations/usersValidation')
 
@@ -87,8 +89,13 @@ router.get('/subcategories/category_name/:category_name',subCategories.get_by_ca
 router.post('/subcategories',subCategories.store);
 
 // SERVICE
-router.post('/service',service.store);
+router.post('/service',upload.single('image_of_service'),service.store);
 router.get('/service',service.get);
 router.get('/service/:id',service.get_by_id);
+
+// REQUEST_SERVICE
+router.post('/request_service',request_service.store_request_service);
+router.get('/request_service',request_service.get_request_service);
+router.get('/request_service/:id',request_service.get_by_id_request_service);
 
 module.exports = router;

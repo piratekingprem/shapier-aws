@@ -22,7 +22,7 @@ exports.get_test = async () => {
 exports.store_test = async (params) =>{
     let message = 'Something went wrong', code = 500, data = [];
     try{
-        const test = await db.query(
+        const test = await db.query(    
             `INSERT into test(tester_name) VALUES (?)`,[params.tester_name]
         );
         
