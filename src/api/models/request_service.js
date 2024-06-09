@@ -6,12 +6,13 @@ exports.store = async (params) => {
     data = [];
   try {
     const request_service = await db.query(
-      `INSERT INTO request_service(first_name,last_name,mobile,email,service_id,address) VALUES(?,?,?,?,?,?)`,
+      `INSERT INTO request_service(first_name,last_name,mobile,email,zip_code,service_id,address) VALUES(?,?,?,?,?,?,?)`,
       [
         params.first_name,
         params.last_name,
         params.mobile,
         params.email,
+        params.zip_code,
         params.service_id,
         params.address,
       ]
