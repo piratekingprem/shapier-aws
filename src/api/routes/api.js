@@ -21,6 +21,7 @@ const subCategories = require('../controllers/subCategories');
 const service = require('../controllers/service');
 const request_service = require('../controllers/request_service');
 const banner = require('../controllers/banners');
+const zip_check = require('../controllers/zip_check');
 
 // APP_VALIDATION
 const userValidation = require('../validations/usersValidation')
@@ -104,5 +105,10 @@ router.post('/banner',upload.single('banner_image'),banner.store_banners);
 router.get('/banner',banner.get_banners);
 router.get('/banner/:banner_category',banner.get_banners_by_banner_category);
 router.get('/banner/:id',banner.get_banners_by_id);
+
+// ZIPS
+router.post('/zip-check',zip_check.store_zip);
+router.get('/zip-check',zip_check.get_all_zips);
+router.get('/zip-check/:zip',zip_check.check_zip_code);
 
 module.exports = router;
