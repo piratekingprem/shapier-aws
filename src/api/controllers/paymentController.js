@@ -4,7 +4,7 @@ const paymentModel = require("../models/payment");
 exports.checkout = async (req, res, next) => {
   try {
     const options = {
-      amount: Number(req.body.amount) * 100, // Ensure amount is a number
+      amount: Number(req.body.amount * 100) , // Ensure amount is a number
       currency: "INR",
     };
     const order = await instance.orders.create(options);
