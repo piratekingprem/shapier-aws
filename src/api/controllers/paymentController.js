@@ -1,14 +1,15 @@
 const { instance } = require("../helpers/commonHelper");
 const paymentModel = require("../models/payment");
-const crypto = require('crypto');
+const crypto = require("crypto");
+require("dotenv").config();
 exports.checkout = async (req, res, next) => {
   try {
     const options = {
-      amount: Number(req.body.amount * 100) , // Ensure amount is a number
+      amount: Number(req.body.amount * 100), // Ensure amount is a number
       currency: "INR",
     };
     const order = await instance.orders.create(options);
-    console.log(order)
+    console.log(order);
     return res.status(200).json({
       success: true,
       order,
@@ -33,8 +34,8 @@ exports.paymentVerification = async (req, res, next) => {
       .createHmac("sha256", process.env.RAZORPAY_APT_SECRET)
       .update(body.toString())
       .digest("hex");
-      console.log("sig recevied", razorpay_signature);
-      console.log("sig generated", expectedSignature);
+    console.log("sig recevied", razorpay_signature);
+    console.log("sig generated", expectedSignature);
 
     const isAuthentic = expectedSignature === razorpay_signature;
 
