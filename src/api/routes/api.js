@@ -85,6 +85,7 @@ router.delete('/cart/:id',cart.delete_cart);
 // Order
 router.post('/checkout', paymentCheckout.checkout);
 router.post('/paymentverification',paymentCheckout.paymentVerification);
+router.get('/getSecreat',paymentCheckout.getPayment);
 
 // subcategories
 router.get('/subcategories',subCategories.get);

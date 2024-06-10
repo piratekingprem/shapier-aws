@@ -12,6 +12,7 @@ exports.store_seller  = async (req,res,next) => {
 exports.get_seller = async (req,res,next) => {
     try {
         const seller  = await sellerController.get();
+        console.log(process.env.RAZORPAY_API_SECRET);
         return res.send(seller);
     } catch (error) {
         next(error);

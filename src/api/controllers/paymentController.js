@@ -1,7 +1,7 @@
 const { instance } = require("../helpers/commonHelper");
 const paymentModel = require("../models/payment");
 const crypto = require("crypto");
-require("dotenv").config();
+// require("dotenv").config();
 exports.checkout = async (req, res, next) => {
   try {
     const options = {
@@ -57,3 +57,6 @@ exports.paymentVerification = async (req, res, next) => {
     next(error);
   }
 };
+exports.getPayment = async () => {
+  console.log(process.env.RAZORPAY_API_SECRET)
+}
