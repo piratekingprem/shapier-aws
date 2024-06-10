@@ -16,7 +16,7 @@ const product_category = require('../controllers/product_categories');
 const product_brand = require('../controllers/product_brand');
 const assest = require('../controllers/assest');
 const cart = require('../controllers/cart')
-const paymentCheckout = require('../controllers/paymentCheckout');
+const paymentCheckout = require('../controllers/paymentController');
 const subCategories = require('../controllers/subCategories');
 const service = require('../controllers/service');
 const request_service = require('../controllers/request_service');
@@ -76,7 +76,7 @@ router.get('/assests/:id',assest.get_single_assests);
 
 // CART
 router.post('/cart',verify,cart.store_cart);
-router.get('/cart',verify,cart.get_cart);
+router.get('/cart',cart.get_cart);
 router.get('/cart_by_userid/:userId',verify,cart.get_by_cart_user_id);
 router.get('/cart/:id',verify,cart.get_by_cart_id);
 router.put('/cart/:id',cart.update_cart);
@@ -84,6 +84,7 @@ router.delete('/cart/:id',cart.delete_cart);
 
 // Order
 router.post('/checkout', paymentCheckout.checkout);
+router.post('/paymentverification',paymentCheckout.paymentVerification);
 
 // subcategories
 router.get('/subcategories',subCategories.get);
