@@ -1,6 +1,6 @@
 const { instance } = require("../helpers/commonHelper");
 const paymentModel = require("../models/payment");
-import crypto from crypto;
+const crypto = require('crypto');
 exports.checkout = async (req, res, next) => {
   try {
     const options = {
