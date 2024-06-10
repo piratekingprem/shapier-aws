@@ -28,6 +28,9 @@ app.get('/',(req,res)=>{
     res.json({message: "please add /api/v1 in url"});
 })
 // app.use(`${appUrl}`,apiRouter)
+app.get('/api/v1/getKey',(req,res)=>{
+    res.status(200).json({key: process.env.RAZORPAY_API_KEY});
+})
 app.use((err, req, res, next) => {
     const statusCode = err.statusCode // 500;
     return res.status(statusCode).json({ message: err.message });
