@@ -22,6 +22,7 @@ const service = require('../controllers/service');
 const request_service = require('../controllers/request_service');
 const banner = require('../controllers/banners');
 const zip_check = require('../controllers/zip_check');
+const seller = require('../controllers/seller');
 
 // APP_VALIDATION
 const userValidation = require('../validations/usersValidation')
@@ -110,5 +111,10 @@ router.get('/banner/:id',banner.get_banners_by_id);
 router.post('/zip-check',zip_check.store_zip);
 router.get('/zip-check',zip_check.get_all_zips);
 router.get('/zip-check/:zip',zip_check.check_zip_code);
+
+// SELLLER
+router.post('/seller',seller.store_seller);
+router.get('/seller',seller.get_seller);
+router.get('/seller/:id',seller.get_seller_by_id);
 
 module.exports = router;
