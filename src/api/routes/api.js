@@ -42,7 +42,7 @@ router.get('/', verify, (req,res)=> {
 })
 
 // USER_API
-router.get('/user', verify,userController.get_user_list);
+router.get('/user', userController.get_user_list);
 router.get('/user/:id',verify,userController.get_user);
 router.delete('/user/:id',verify,userValidation.deleteValidation,userController.delete_user);
 
