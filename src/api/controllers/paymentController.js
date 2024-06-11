@@ -2,6 +2,7 @@ const { instance } = require("../helpers/commonHelper");
 const paymentModel = require("../models/payment");
 const crypto = require("crypto");
 // require("dotenv").config();
+console.log(instance);
 exports.checkout = async (req, res, next) => {
   try {
     const options = {
@@ -27,35 +28,26 @@ exports.paymentVerification = async (req, res, next) => {
     const {
       razorpay_order_id,
       razorpay_payment_id,
-      razorpay_signature
+      razorpay_signature,
     } = req.body;
 
-    console.log(razorpay_order_id, razorpay_payment_id, razorpay_signature);
-    
-    const body = razorpay_order_id + "|" + razorpay_payment_id;
+    const sha = crypto.createHmac("sha256", process.env.RAZORPAY_KEY_SECRET);
+    // order_id + " | " + razorpay_payment_id
 
-    const expectedSignature = crypto
-      .createHmac("sha256", process.env.RAZORPAY_API_SECRET)
-      .update(body.toString())
-      .digest("hex");
-    console.log("sig recevied", razorpay_signature);
-    console.log("sig generated", expectedSignature);
+    sha.update(`${razorpay_order_id}|${razorpay_payment_id}`);
 
-    const isAuthentic = expectedSignature === razorpay_signature;
+    const digest = sha.digest("hex");
 
-    const paymentData = {
-      razorpay_order_id,
-      razorpay_payment_id,
-      razorpay_signature,
-    };
-
-    if (isAuthentic) {
-      const payment = await paymentModel.store(paymentData);
-      res.send(payment);
-      // res.redirect(
-      //   // `http://localhost:5000/paymentsuccess?reference=${razorpay_payment_id}`
-      // );
+    if (digest !== razorpay_signature) {
+      return res.status(400).json({ msg: " Transaction is not legit!" });
     }
+
+    res.json({
+      msg: " Transaction is legit!",
+      orderId: razorpay_order_id,
+      paymentId: razorpay_payment_id,
+    });
+    
   } catch (error) {
     next(error);
   }

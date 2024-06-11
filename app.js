@@ -38,6 +38,7 @@ app.use((err, req, res, next) => {
 
 app.use(`${appUrl}`,apiRouter)
 
+
 app.listen(port, ()=>{
     console.log(`Backend app listening at http://localhost:${port}`)
 })
