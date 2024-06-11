@@ -49,7 +49,7 @@ router.delete('/user/:id',verify,userValidation.deleteValidation,userController.
 // PRODUCT API
 router.get('/product',product.get_product);
 router.get('/product/:id',product.get_product_id);
-router.get('/api/v1/products/search',product.get_search);
+router.get('/product/search',product.get_search);
 router.get('/product/subcategory_id/:subcategory_id',product.get_subcategory_id);
 router.get('/product/brands/:brand_id',product.get_product_by_brand_id);
 router.post('/product',upload.single('product_image'),product.store_product);
