@@ -83,6 +83,30 @@ exports.get_product = async () => {
   return { message, code, data };
 };
 
+exports.get_product_by_search = async (query) =>{
+  let message = "Something went wrong",
+  code = 500,
+  data = [];
+try {
+  const search = await db.query(
+    `SELECT * FROM product WHERE product LIKE ? OR product_description LIKE ?`,
+    [`%${query}%`, `%${query}%`]
+  );
+
+  if (!search.length) {
+    message = "No Product Found";
+    code = 400;
+  } else {
+    message = "Product fetched successfully";
+    code = 200;
+    data = search;
+  }
+} catch (error) {
+  message = error.message || error;
+}
+
+return { message, code, data };
+}
 exports.get_product_by_id = async (id) => {
   let message = "Something went wrong",
     code = 500,

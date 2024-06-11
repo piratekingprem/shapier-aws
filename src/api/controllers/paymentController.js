@@ -2,7 +2,6 @@ const { instance } = require("../helpers/commonHelper");
 const paymentModel = require("../models/payment");
 const crypto = require("crypto");
 // require("dotenv").config();
-console.log(instance);
 exports.checkout = async (req, res, next) => {
   try {
     const options = {
@@ -37,7 +36,7 @@ exports.paymentVerification = async (req, res, next) => {
     sha.update(`${razorpay_order_id}|${razorpay_payment_id}`);
 
     const digest = sha.digest("hex");
-    console.log(razorpay_order_id, razorpay_payment_id, razorpay_signature);
+    
     if (digest !== razorpay_signature) {
       return res.status(400).json({ msg: " Transaction is not legit!" });
     }
@@ -47,6 +46,8 @@ exports.paymentVerification = async (req, res, next) => {
       orderId: razorpay_order_id,
       paymentId: razorpay_payment_id,
     });
+    
+
   } catch (error) {
     next(error);
   }

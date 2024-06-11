@@ -43,6 +43,15 @@ exports.get_product = async (req, res, next) => {
   }
 };
 
+exports.get_search = async (req,res,next) =>{
+  try {
+    const product = await products.get_product_by_search(req.query.search);
+    console.log(req.query.search);
+    return res.send(product);
+  } catch (error) {
+    next(error);
+  }
+}
 exports.update_product = async (req,res,next)=>{
   try {
     const product = await products.update_product(req.params.id,req.body);
