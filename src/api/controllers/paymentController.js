@@ -31,7 +31,7 @@ exports.paymentVerification = async (req, res, next) => {
       razorpay_signature,
     } = req.body;
 
-    const sha = crypto.createHmac("sha256", process.env.RAZORPAY_KEY_SECRET);
+    const sha = crypto.createHmac("sha256", process.env.RAZORPAY_API_SECRET);
     // order_id + " | " + razorpay_payment_id
 
     sha.update(`${razorpay_order_id}|${razorpay_payment_id}`);
@@ -47,7 +47,7 @@ exports.paymentVerification = async (req, res, next) => {
       orderId: razorpay_order_id,
       paymentId: razorpay_payment_id,
     });
-    
+
   } catch (error) {
     next(error);
   }
