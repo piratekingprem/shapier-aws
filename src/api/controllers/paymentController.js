@@ -10,7 +10,7 @@ exports.checkout = async (req, res, next) => {
       currency: "INR",
     };
     const order = await instance.orders.create(options);
-    console.log(order);
+
     return res.status(200).json({
       success: true,
       order,
@@ -37,7 +37,7 @@ exports.paymentVerification = async (req, res, next) => {
     sha.update(`${razorpay_order_id}|${razorpay_payment_id}`);
 
     const digest = sha.digest("hex");
-
+    console.log(razorpay_order_id, razorpay_payment_id, razorpay_signature);
     if (digest !== razorpay_signature) {
       return res.status(400).json({ msg: " Transaction is not legit!" });
     }
@@ -47,7 +47,6 @@ exports.paymentVerification = async (req, res, next) => {
       orderId: razorpay_order_id,
       paymentId: razorpay_payment_id,
     });
-
   } catch (error) {
     next(error);
   }
