@@ -23,7 +23,7 @@ const request_service = require('../controllers/request_service');
 const banner = require('../controllers/banners');
 const zip_check = require('../controllers/zip_check');
 const seller = require('../controllers/seller');
-
+const search = require('../controllers/search');
 // APP_VALIDATION
 const userValidation = require('../validations/usersValidation')
 
@@ -56,6 +56,8 @@ router.post('/product',upload.single('product_image'),product.store_product);
 router.put('/product/:id',product.update_product);
 router.delete('/product/:id',product.delete_product);
 
+// SEARCH
+router.get('/search',search.search_products);
 // PRODUCT_CATEGORIES API
 router.get('/product_categories',product_category.get_product_categories);
 router.get('/product_categories/:id',product_category.get_product_category_by_id);

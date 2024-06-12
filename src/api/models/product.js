@@ -89,9 +89,9 @@ exports.get_product_by_search = async (query) =>{
   data = [];
 try {
   const search = await db.query(
-    `SELECT * FROM product WHERE product LIKE ? OR product_description LIKE ?`,
-    [`%${query}%`, `%${query}%`]
-  );
+    `SELECT * FROM product WHERE product LIKE ?`,
+    [`%${query.search}%`]
+  );  
 
   if (!search.length) {
     message = "No Product Found";

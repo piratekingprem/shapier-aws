@@ -44,9 +44,10 @@ exports.get_product = async (req, res, next) => {
 };
 
 exports.get_search = async (req,res,next) =>{
+  console.log(req.body)
   try {
-    const product = await products.get_product_by_search(req.query.search);
-    console.log(req.query.search);
+    const product = await products.get_product_by_search(req.body);
+    console.log(req.body)
     return res.send(product);
   } catch (error) {
     next(error);
