@@ -6,10 +6,10 @@ exports.store = async (params) => {
     data = [];
   try {
     console.log("params", params);
-    console.log("params order id",params.razorpay_order_id)
+    console.log("params user id",params.userId)
     const payment_status = "complete";
     // const orders = await db.query(
-    //   `INSERT INTO orders (order_id,user_id,total_amount,payment_mode,payment_status,bill_firstName,bil_lastName,bill_mobile,bill_address,bill_pincode,bill_city,bill_state,bill_email,gst_no) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)`,[]
+    //   `INSERT INTO orders (order_id,user_id,total_amount,payment_mode,payment_status,bill_firstName,bil_lastName,bill_mobile,bill_address,bill_pincode,bill_city,bill_state,bill_email,gst_no) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)`,[params.razorpay_order_id,params.]
     // );
     // const query = "INSERT INTO payment (order_id, payment_id, signature) VALUES (?, ?, ?)";
     // const values = [params.orderId, params.paymentId, params.signature];
