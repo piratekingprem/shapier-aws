@@ -9,6 +9,7 @@ exports.store = async (params) => {
     console.log("params billing info", params.billingInfo.firstName);
     const payment_status = "complete";
     const total_amount = +params.total_amount;
+    console.log(total_amount)
     const paymentMode = params.paymentMode;
     const gst_no = params.gst_no ?? null;
     const orders = await db.query(
