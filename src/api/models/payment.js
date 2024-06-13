@@ -5,7 +5,12 @@ exports.store = async (params) => {
     code = 500,
     data = [];
   try {
-    console.log("params",params);
+    console.log("params", params);
+    console.log("params order id",params.razorpay_order_id)
+    const payment_status = "complete";
+    // const orders = await db.query(
+    //   `INSERT INTO orders (order_id,user_id,total_amount,payment_mode,payment_status,bill_firstName,bil_lastName,bill_mobile,bill_address,bill_pincode,bill_city,bill_state,bill_email,gst_no) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)`,[]
+    // );
     // const query = "INSERT INTO payment (order_id, payment_id, signature) VALUES (?, ?, ?)";
     // const values = [params.orderId, params.paymentId, params.signature];
 
@@ -17,7 +22,6 @@ exports.store = async (params) => {
     //   code = 200;
     //   data = { orderId: params.orderId, paymentId: params.paymentId, signature: params.signature };
     // }
-
   } catch (error) {
     message = error.message;
   }
