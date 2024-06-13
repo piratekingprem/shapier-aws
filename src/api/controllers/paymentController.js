@@ -2,6 +2,7 @@ const { instance } = require("../helpers/commonHelper");
 const paymentModel = require("../models/payment");
 const crypto = require("crypto");
 // require("dotenv").config();
+
 exports.checkout = async (req, res, next) => {
   try {
     const options = {
@@ -22,6 +23,7 @@ exports.checkout = async (req, res, next) => {
     });
   }
 };
+
 exports.paymentVerification = async (req, res, next) => {
   try {
     const {
@@ -41,17 +43,18 @@ exports.paymentVerification = async (req, res, next) => {
     sha.update(`${razorpay_order_id}|${razorpay_payment_id}`);
 
     const digest = sha.digest("hex");
-    
+
     if (digest !== razorpay_signature) {
-      return res.status(400).json({ msg: " Transaction is not legit!" });
+      return res.status(400).json({ msg: "Transaction is not legit!" });
     }
     const userPayment = await paymentModel.store(payment)
     return res.send(userPayment);
-    
+
   } catch (error) {
     next(error);
   }
 };
+
 exports.getPayment = async () => {
   console.log(process.env.RAZORPAY_API_SECRET);
 };
