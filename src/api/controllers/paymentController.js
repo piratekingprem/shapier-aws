@@ -32,6 +32,11 @@ exports.paymentVerification = async (req, res, next) => {
 
     const sha = crypto.createHmac("sha256", process.env.RAZORPAY_API_SECRET);
     // order_id + " | " + razorpay_payment_id
+    const payment = {
+      orderId: razorpay_order_id,
+      paymentId: razorpay_payment_id,
+      signature: razorpay_signature
+    }
 
     sha.update(`${razorpay_order_id}|${razorpay_payment_id}`);
 
@@ -40,14 +45,9 @@ exports.paymentVerification = async (req, res, next) => {
     if (digest !== razorpay_signature) {
       return res.status(400).json({ msg: " Transaction is not legit!" });
     }
-
-    res.json({
-      msg: " Transaction is legit!",
-      orderId: razorpay_order_id,
-      paymentId: razorpay_payment_id,
-    });
+    const userPayment = await paymentModel.store(payment)
+    return res.send(userPayment);
     
-
   } catch (error) {
     next(error);
   }

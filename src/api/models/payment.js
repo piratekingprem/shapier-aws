@@ -5,20 +5,7 @@ exports.store = async (params) => {
     code = 500,
     data = [];
   try {
-    const payment = await db.query(
-      `INSERT INTO payments(razorpay_order_id, razorpay_payment_id, razorpay_signature) VALUES(?,?,?)`,
-      [
-        params.razorpay_order_id,
-        params.razorpay_payment_id,
-        params.razorpay_signature,
-      ]
-    );
-    (message = "Error in creating payment"), (code = 400), (data = []);
-    if (payment.affectedRows) {
-        message = "Payment creted successfully";
-        code = 201;
-        data = payment;
-    }
+    console.log(params.razorpay_order_id);
   } catch (error) {
     message = error;
   }
