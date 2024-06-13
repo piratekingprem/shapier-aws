@@ -6,7 +6,7 @@ exports.store = async (params) => {
     data = [];
   try {
     console.log("params", params);
-    console.log("params billing info",params.billingInfo);
+    console.log("params billing info",params.billingInfo.firstName);
     const payment_status = "complete";
     const total_amount = +params.total_amount;
     const paymentMode = params.paymentMode;
