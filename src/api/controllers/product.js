@@ -42,17 +42,6 @@ exports.get_product = async (req, res, next) => {
     next(error);
   }
 };
-
-exports.get_search = async (req,res,next) =>{
-  console.log(req.body)
-  try {
-    const product = await products.get_product_by_search(req.body);
-    console.log(req.body)
-    return res.send(product);
-  } catch (error) {
-    next(error);
-  }
-}
 exports.update_product = async (req,res,next)=>{
   try {
     const product = await products.update_product(req.params.id,req.body);

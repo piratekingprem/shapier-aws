@@ -1,7 +1,7 @@
 module.exports = {
     "up": `CREATE TABLE IF NOT EXISTS orders (
         id INT AUTO_INCREMENT PRIMARY KEY,
-        order_id INT NULL,
+        order_id varchar(225) NULL,
         user_id INT NULL,
         total_amount DOUBLE(15,2) DEFAULT 0.0,
         payment_mode VARCHAR(255) NULL,
