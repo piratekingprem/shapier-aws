@@ -8,17 +8,18 @@ exports.store = async (params) => {
     console.log(params.orderId); // Corrected property name
     // Assuming you need to store the data in the database
     // Example SQL query for inserting the payment record
-    const query = "INSERT INTO payments (order_id, payment_id, signature) VALUES (?, ?, ?)";
-    const values = [params.orderId, params.paymentId, params.signature];
+    console.log(params)
+    // const query = "INSERT INTO payment (order_id, payment_id, signature) VALUES (?, ?, ?)";
+    // const values = [params.orderId, params.paymentId, params.signature];
 
-    // Assuming db.query is a function to execute SQL queries
-    const result = await db.query(query, values);
+    // // Assuming db.query is a function to execute SQL queries
+    // const result = await db.query(query, values);
 
-    if (result.affectedRows > 0) {
-      message = "Payment stored successfully";
-      code = 200;
-      data = { orderId: params.orderId, paymentId: params.paymentId, signature: params.signature };
-    }
+    // if (result.affectedRows > 0) {
+    //   message = "Payment stored successfully";
+    //   code = 200;
+    //   data = { orderId: params.orderId, paymentId: params.paymentId, signature: params.signature };
+    // }
   } catch (error) {
     message = error.message;
   }
