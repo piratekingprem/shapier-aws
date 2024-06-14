@@ -26,3 +26,13 @@ exports.get_by_id = async (req,res,next) => {
         next(error);
     }
 }
+
+exports.get_by_service_name = async (req,res,next) => {
+    try {
+        const service = await serviceModel.get_service_by_name(req.params.service_name)
+        return res.send(service);
+    } catch (error) {
+        next(error);
+    }
+ 
+}
