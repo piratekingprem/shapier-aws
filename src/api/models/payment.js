@@ -12,6 +12,13 @@ exports.store = async (params) => {
     console.log(total_amount)
     const paymentMode = params.paymentMode;
     const gst_no = params.gst_no ?? null;
+    const productIds = params.productIds;
+    for (let productId of productIds) {
+      await db.query(
+        `INSERT INTO orders_product (order_id, product_id) VALUES (?, ?)`,
+        [params.razorpay_order_id, productId]
+      );
+    }
     const orders = await db.query(
       `INSERT INTO orders (order_id,user_id,total_amount,payment_mode,payment_status,bill_firstName,bil_lastName,bill_mobile,bill_address,bill_pincode,bill_city,bill_state,bill_email,gst_no) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)`,
       [
