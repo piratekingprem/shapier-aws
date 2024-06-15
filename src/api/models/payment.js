@@ -10,6 +10,7 @@ exports.store = async (params) => {
     const paymentMode = params.paymentMode;
     const gst_no = params.gst_no ?? null;
     const productIds = params.productIds;
+    console.log("params",params)
     for (let productId of productIds) {
       await db.query(
         `INSERT INTO orders_product (order_id, product_id) VALUES (?, ?)`,

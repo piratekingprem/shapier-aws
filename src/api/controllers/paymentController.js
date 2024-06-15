@@ -47,7 +47,7 @@ exports.paymentVerification = async (req, res, next) => {
     if (digest !== razorpay_signature) {
       return res.status(400).json({ msg: "Transaction is not legit!" });
     }
-
+    console.log("req body",req.body);
     const userPayment = await paymentModel.store(req.body);
     return res.send(userPayment);
   } catch (error) {
