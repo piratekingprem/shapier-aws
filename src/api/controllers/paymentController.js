@@ -31,14 +31,14 @@ exports.paymentVerification = async (req, res, next) => {
       razorpay_payment_id,
       razorpay_signature,
     } = req.body;
-    
+
     const sha = crypto.createHmac("sha256", process.env.RAZORPAY_API_SECRET);
     // order_id + " | " + razorpay_payment_id
     const payment = {
       orderId: razorpay_order_id,
       paymentId: razorpay_payment_id,
-      signature: razorpay_signature
-    }
+      signature: razorpay_signature,
+    };
 
     sha.update(`${razorpay_order_id}|${razorpay_payment_id}`);
 
@@ -47,10 +47,10 @@ exports.paymentVerification = async (req, res, next) => {
     if (digest !== razorpay_signature) {
       return res.status(400).json({ msg: "Transaction is not legit!" });
     }
-    
-    const userPayment = await paymentModel.store(req.body);
-    return res.send(userPayment);
 
+    const userPayment = await paymentModel.store(req.body);
+    res.redirect('https://shapier.in/thankyou');
+    return res.send(userPayment);
   } catch (error) {
     next(error);
   }
@@ -58,4 +58,13 @@ exports.paymentVerification = async (req, res, next) => {
 
 exports.getPayment = async () => {
   console.log(process.env.RAZORPAY_API_SECRET);
+};
+
+exports.get_order = async (req, res, next) => {
+  try {
+    const order = await paymentModel.get();
+    return res.json(order);
+  } catch (error) {
+    next(error);
+  }
 };

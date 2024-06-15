@@ -5,11 +5,8 @@ exports.store = async (params) => {
     code = 500,
     data = [];
   try {
-    console.log("params", params);
-    console.log("params billing info", params.billingInfo.firstName);
     const payment_status = "complete";
     const total_amount = +params.amount;
-    console.log(total_amount)
     const paymentMode = params.paymentMode;
     const gst_no = params.gst_no ?? null;
     const productIds = params.productIds;
@@ -50,4 +47,35 @@ exports.store = async (params) => {
     message = error.message;
   }
   return { message, code, data };
+};
+
+exports.get = async () => {
+  let message = "Something went wrong",
+    code = 500,
+    data = [];
+  try {
+    const order = await db.query(
+      `SELECT 
+        o.*,
+        GROUP_CONCAT(p.product SEPARATOR ', ') AS product_names
+      FROM 
+        orders o
+      JOIN 
+        orders_product op ON o.order_id = op.order_id
+      JOIN 
+        product p ON op.product_id = p.id
+      GROUP BY 
+        o.id`,[]
+);
+    (message = "NO order available"), (code = 400), (data = []);
+    if (order.length) {
+      message = "order fetched successfully";
+      code = 200;
+      data = order
+    }
+  } catch (error) {
+    message = error;
+  }
+
+  return {message,code,data};
 };
