@@ -33,7 +33,15 @@ exports.paymentVerification = async (req, res, next) => {
     } = req.body;
 
     const sha = crypto.createHmac("sha256", process.env.RAZORPAY_API_SECRET);
+    // order_id + " | " + razorpay_payment_id
+    const payment = {
+      orderId: razorpay_order_id,
+      paymentId: razorpay_payment_id,
+      signature: razorpay_signature,
+    };
+
     sha.update(`${razorpay_order_id}|${razorpay_payment_id}`);
+
     const digest = sha.digest("hex");
 
     if (digest !== razorpay_signature) {
@@ -41,9 +49,7 @@ exports.paymentVerification = async (req, res, next) => {
     }
 
     const userPayment = await paymentModel.store(req.body);
-
-    // Redirect to thank you page after storing the payment
-    return res.redirect('https://shapier.in/thankyou');
+    return res.send(userPayment);
   } catch (error) {
     next(error);
   }
