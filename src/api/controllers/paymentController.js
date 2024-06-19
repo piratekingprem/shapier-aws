@@ -1,3 +1,4 @@
+const { mailoption,transporter } = require("../../config/smtp");
 const { instance } = require("../helpers/commonHelper");
 const paymentModel = require("../models/payment");
 const crypto = require("crypto");
@@ -47,8 +48,15 @@ exports.paymentVerification = async (req, res, next) => {
     if (digest !== razorpay_signature) {
       return res.status(400).json({ msg: "Transaction is not legit!" });
     }
-    console.log("req body",req.body);
+    console.log("req body", req.body);
     const userPayment = await paymentModel.store(req.body);
+
+    mailoption.to = "rp0617430@gmail.com"
+    mailoption.subject = "Order Created"
+    mailoption.html = `<p>Your order with order ID ${razorpay_order_id} has been created successfully.</p>`
+    
+    await transporter.sendMail(mailoption);
+    
     return res.send(userPayment);
   } catch (error) {
     next(error);

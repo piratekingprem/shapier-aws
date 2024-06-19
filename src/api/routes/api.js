@@ -90,6 +90,7 @@ router.post('/checkout', paymentCheckout.checkout);
 router.post('/paymentverification',paymentCheckout.paymentVerification);
 router.get('/getSecreat',paymentCheckout.getPayment);
 router.get('/order',paymentCheckout.get_order);
+
 // subcategories
 router.get('/subcategories',subCategories.get);
 router.get('/subcategories/:id',subCategories.get_by_id)
