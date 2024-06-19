@@ -1,4 +1,4 @@
-const { mailoption,transporter } = require("../../config/smtp");
+const { mailoption, transporter } = require("../../config/smtp");
 const { instance } = require("../helpers/commonHelper");
 const paymentModel = require("../models/payment");
 const crypto = require("crypto");
@@ -51,12 +51,24 @@ exports.paymentVerification = async (req, res, next) => {
     console.log("req body", req.body);
     const userPayment = await paymentModel.store(req.body);
 
-    mailoption.to = "rp0617430@gmail.com"
-    mailoption.subject = "Order Created"
-    mailoption.html = `<p>Your order with order ID ${razorpay_order_id} has been created successfully.</p>`
-    
+    mailoption.to = `${req.body.billingInfo.email}`;
+    mailoption.subject = "Order Created";
+    mailoption.html = `  
+    <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+    <h2 style="color: #4CAF50;">Order Confirmation</h2>
+    <p>Dear ${req.body.billingInfo.firstName},</p>
+    <p>Thank you for your order. We are pleased to confirm that your order has been successfully created.</p>
+    <h4>Order Details:</h4>
+    <p><strong>Order ID:</strong> ${razorpay_order_id}</p>
+    <p><strong>Payment ID:</strong> ${razorpay_payment_id}</p>
+    <p>We are processing your order and will notify you once it has been shipped.</p>
+    <p>If you have any questions or need further assistance, please do not hesitate to contact us.</p>
+    <p>Best regards,</p>
+    <p><strong>Shapier Team</strong></p>
+  </div>`;
+
     await transporter.sendMail(mailoption);
-    
+
     return res.send(userPayment);
   } catch (error) {
     next(error);
