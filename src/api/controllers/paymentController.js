@@ -73,8 +73,8 @@ exports.paymentVerification = async (req, res, next) => {
     await transporter.sendMail(mailoption);
 
     // WhatsApp Notification to Vendor
-    const vendorWhatsAppNumber = 6377692127; // Vendor's WhatsApp number
-    const twilioWhatsAppNumber =14155238886; // Your Twilio WhatsApp sender number
+    const vendorWhatsAppNumber =+916377692127; // Vendor's WhatsApp number
+    const twilioWhatsAppNumber =+14155238886; // Your Twilio WhatsApp sender number
 
     await client.messages.create({
       from: `whatsapp:${twilioWhatsAppNumber}`,
