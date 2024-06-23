@@ -3,6 +3,8 @@ const app = express();
 const cors = require('cors');
 const apiRouter = require('./src/api/routes/api')
 const methodeOverride = require('method-override');
+const { session } = require("passport");
+const passport = require("passport");
 require('dotenv').config();
 
 app.use(cors());
@@ -20,6 +22,10 @@ app.use((req, res, next) => {
 
     next();
 });
+
+
+app.use(passport.initialize());
+app.use(passport.session());
 
 const port = process.env.PORT || 3000;
 const appUrl = process.env.APP_URL;

@@ -2,7 +2,11 @@ const { mailoption, transporter } = require("../../config/smtp");
 const { instance } = require("../helpers/commonHelper");
 const paymentModel = require("../models/payment");
 const crypto = require("crypto");
-// require("dotenv").config();
+const accountSid  = process.env.TWILIO_ACCOUNT_SID;
+const authToken  = process.env.TWILIO_AUTH_TOKEN;
+const twilio = require('twilio');
+
+const client = twilio(accountSid, authToken);
 
 exports.checkout = async (req, res, next) => {
   try {
@@ -34,7 +38,6 @@ exports.paymentVerification = async (req, res, next) => {
     } = req.body;
 
     const sha = crypto.createHmac("sha256", process.env.RAZORPAY_API_SECRET);
-    // order_id + " | " + razorpay_payment_id
     const payment = {
       orderId: razorpay_order_id,
       paymentId: razorpay_payment_id,
@@ -42,7 +45,6 @@ exports.paymentVerification = async (req, res, next) => {
     };
 
     sha.update(`${razorpay_order_id}|${razorpay_payment_id}`);
-
     const digest = sha.digest("hex");
 
     if (digest !== razorpay_signature) {
@@ -51,6 +53,7 @@ exports.paymentVerification = async (req, res, next) => {
     console.log("req body", req.body);
     const userPayment = await paymentModel.store(req.body);
 
+    // MAIL
     mailoption.to = `${req.body.billingInfo.email}`;
     mailoption.subject = "Order Created";
     mailoption.html = `  
@@ -66,8 +69,17 @@ exports.paymentVerification = async (req, res, next) => {
     <p>Best regards,</p>
     <p><strong>Shapier Team</strong></p>
   </div>`;
-
     await transporter.sendMail(mailoption);
+
+    // WhatsApp Notification to Vendor
+    const vendorWhatsAppNumber = 6377692127; // Vendor's WhatsApp number
+    const twilioWhatsAppNumber =14155238886; // Your Twilio WhatsApp sender number
+
+    await client.messages.create({
+      from: `whatsapp:${twilioWhatsAppNumber}`,
+      to: `whatsapp:${vendorWhatsAppNumber}`,
+      body: `New Order Created!\nOrder ID: ${razorpay_order_id}\nPayment ID: ${razorpay_payment_id}\nCustomer: ${req.body.billingInfo.firstName} ${req.body.billingInfo.lastName}\nAmount: ${req.body.amount} INR`,
+    });
 
     return res.send(userPayment);
   } catch (error) {
