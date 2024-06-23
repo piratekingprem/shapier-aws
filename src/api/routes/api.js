@@ -32,16 +32,8 @@ router.post("/test", test.store_test);
 
 // AUTH API
 router.post("/login", authController.login);
-router.post(
-  "/register",
-  userValidation.registerValidation,
-  authController.register
-);
-router.post(
-  "/refresh-token",
-  userValidation.refreshTokenValidation,
-  authController.refreshToken
-);
+router.post("/register",userValidation.registerValidation,authController.register);
+router.post("/refresh-token",userValidation.refreshTokenValidation,authController.refreshToken);
 
 router.get("/", verify, (req, res) => {
   res.json({ message: "ok" });
@@ -50,21 +42,13 @@ router.get("/", verify, (req, res) => {
 // USER_API
 router.get("/user", userController.get_user_list);
 router.get("/user/:id", verify, userController.get_user);
-router.delete(
-  "/user/:id",
-  verify,
-  userValidation.deleteValidation,
-  userController.delete_user
-);
+router.delete("/user/:id",verify,userValidation.deleteValidation,userController.delete_user);
 
 // PRODUCT API
 router.get("/product", product.get_product);
 router.get("/product/:id", product.get_product_id);
 // router.get('/product/search',product.get_search);
-router.get(
-  "/product/subcategory_id/:subcategory_id",
-  product.get_subcategory_id
-);
+router.get("/product/subcategory_id/:subcategory_id",product.get_subcategory_id);
 router.get("/product/brands/:brand_id", product.get_product_by_brand_id);
 router.post("/product", upload.single("product_image"), product.store_product);
 router.put("/product/:id", product.update_product);
@@ -74,29 +58,15 @@ router.delete("/product/:id", product.delete_product);
 router.get("/search", search.search_products);
 // PRODUCT_CATEGORIES API
 router.get("/product_categories", product_category.get_product_categories);
-router.get(
-  "/product_categories/:id",
-  product_category.get_product_category_by_id
-);
-router.post(
-  "/product_categories",
-  upload.single("product_category_image"),
-  product_category.store_product_categories
-);
+router.get("/product_categories/:id",product_category.get_product_category_by_id);
+router.post("/product_categories",upload.single("product_category_image"),product_category.store_product_categories);
 router.put("/product_categories/:id", product_category.update_product_category);
-router.delete(
-  "/product_categories/:id",
-  product_category.delete_product_category
-);
+router.delete("/product_categories/:id",product_category.delete_product_category);
 
 // PRODUCT_BRANDS API
 router.get("/product_brand", product_brand.get_brand);
 router.get("/product_brand/:id", product_brand.get_brand_by_id);
-router.post(
-  "/product_brand",
-  upload.single("product_image"),
-  product_brand.store_brand
-);
+router.post("/product_brand",upload.single("product_image"),product_brand.store_brand);
 router.put("/product_brand/:id", product_brand.update_brand);
 router.delete("/product_brand/:id", product_brand.delete_brand);
 
@@ -119,26 +89,23 @@ router.post("/paymentverification", paymentCheckout.paymentVerification);
 router.get("/getSecreat", paymentCheckout.getPayment);
 router.get("/order", paymentCheckout.get_order);
 
-router.get(
-  "/auth/google",
-  passport.authenticate("google", { scope: ["email", "profile"] })
-);
+// router.get(
+//   "/auth/google",
+//   passport.authenticate("google", { scope: ["email", "profile"] })
+// );
 
-router.get(
-  "/auth/google/callback",
-  passport.authenticate("google", {
-    successRedirect: "/auth/google/success",
-    failureRedirect: "/auth/google/failure",
-  })
-);
+// router.get(
+//   "/auth/google/callback",
+//   passport.authenticate("google", {
+//     successRedirect: "/auth/google/success",
+//     failureRedirect: "/auth/google/failure",
+//   })
+// );
 
 // subcategories
 router.get("/subcategories", subCategories.get);
 router.get("/subcategories/:id", subCategories.get_by_id);
-router.get(
-  "/subcategories/category_name/:category_name",
-  subCategories.get_by_category_name
-);
+router.get("/subcategories/category_name/:category_name",subCategories.get_by_category_name);
 router.post("/subcategories", subCategories.store);
 
 // SERVICE
