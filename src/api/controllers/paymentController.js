@@ -2,12 +2,12 @@ const { mailoption, transporter } = require("../../config/smtp");
 const { instance } = require("../helpers/commonHelper");
 const paymentModel = require("../models/payment");
 const crypto = require("crypto");
-const accountSid  = process.env.TWILIO_ACCOUNT_SID;
-const authToken  = process.env.TWILIO_AUTH_TOKEN;
+const accountSid = process.env.TWILIO_ACCOUNT_SID;
+const authToken = process.env.TWILIO_AUTH_TOKEN;
 const twilio = require('twilio');
 const client = twilio(accountSid, authToken);
 
-require('dotenv').config()
+require('dotenv').config();
 
 exports.checkout = async (req, res, next) => {
   try {
@@ -57,24 +57,24 @@ exports.paymentVerification = async (req, res, next) => {
     // MAIL
     mailoption.to = `${req.body.billingInfo.email}`;
     mailoption.subject = "Order Created";
-    mailoption.html = `  
-    <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
-    <h2 style="color: #4CAF50;">Order Confirmation</h2>
-    <p>Dear ${req.body.billingInfo.firstName},</p>
-    <p>Thank you for your order. We are pleased to confirm that your order has been successfully created.</p>
-    <h4>Order Details:</h4>
-    <p><strong>Order ID:</strong> ${razorpay_order_id}</p>
-    <p><strong>Payment ID:</strong> ${razorpay_payment_id}</p>
-    <p>We are processing your order and will notify you once it has been shipped.</p>
-    <p>If you have any questions or need further assistance, please do not hesitate to contact us.</p>
-    <p>Best regards,</p>
-    <p><strong>Shapier Team</strong></p>
-  </div>`;
+    mailoption.html = `
+      <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+        <h2 style="color: #4CAF50;">Order Confirmation</h2>
+        <p>Dear ${req.body.billingInfo.firstName},</p>
+        <p>Thank you for your order. We are pleased to confirm that your order has been successfully created.</p>
+        <h4>Order Details:</h4>
+        <p><strong>Order ID:</strong> ${razorpay_order_id}</p>
+        <p><strong>Payment ID:</strong> ${razorpay_payment_id}</p>
+        <p>We are processing your order and will notify you once it has been shipped.</p>
+        <p>If you have any questions or need further assistance, please do not hesitate to contact us.</p>
+        <p>Best regards,</p>
+        <p><strong>Shapier Team</strong></p>
+      </div>`;
     await transporter.sendMail(mailoption);
 
     // WhatsApp Notification to Vendor
-    const vendorWhatsAppNumber =+916377692127; // Vendor's WhatsApp number
-    const twilioWhatsAppNumber =+14155238886; // Your Twilio WhatsApp sender number
+    const vendorWhatsAppNumber = '+916377692127'; // Vendor's WhatsApp number
+    const twilioWhatsAppNumber = '+14155238886'; // Your Twilio WhatsApp sender number
 
     await client.messages.create({
       from: `whatsapp:${twilioWhatsAppNumber}`,
@@ -82,21 +82,34 @@ exports.paymentVerification = async (req, res, next) => {
       body: `New Order Created!\nOrder ID: ${razorpay_order_id}\nPayment ID: ${razorpay_payment_id}\nCustomer: ${req.body.billingInfo.firstName} ${req.body.billingInfo.lastName}\nAmount: ${req.body.amount} INR`,
     });
 
-    return res.send(userPayment);
+    return res.status(200).json(userPayment);
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Something went wrong",
+      error: error.message,
+    });
+  }
+};
+
+exports.getPayment = async (req, res, next) => {
+  try {
+    console.log(process.env.RAZORPAY_API_SECRET);
+    res.status(200).json({ message: "API secret logged" });
   } catch (error) {
     next(error);
   }
 };
 
-exports.getPayment = async () => {
-  console.log(process.env.RAZORPAY_API_SECRET);
-};
-
 exports.get_order = async (req, res, next) => {
   try {
     const order = await paymentModel.get();
-    return res.json(order);
+    return res.status(200).json(order);
   } catch (error) {
-    next(error);
+    return res.status(500).json({
+      success: false,
+      message: "Something went wrong",
+      error: error.message,
+    });
   }
 };
