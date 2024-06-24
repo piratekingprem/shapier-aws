@@ -2,9 +2,7 @@ const { mailoption, transporter } = require("../../config/smtp");
 const { instance } = require("../helpers/commonHelper");
 const paymentModel = require("../models/payment");
 const crypto = require("crypto");
-
 const twilio = require("twilio");
-
 require("dotenv").config();
 
 exports.checkout = async (req, res, next) => {
@@ -51,7 +49,7 @@ exports.paymentVerification = async (req, res, next) => {
     }
     console.log("req body", req.body);
     const userPayment = await paymentModel.store(req.body);
-
+    
     // MAIL
     mailoption.to = `${req.body.billingInfo.email}`;
     mailoption.subject = "Order Created";
@@ -71,20 +69,20 @@ exports.paymentVerification = async (req, res, next) => {
     await transporter.sendMail(mailoption);
 
     // WhatsApp Notification to Vendor
-    const accountSid = "ACc6722c3142b6e64c7b6f5a813040f8db";
-    const authToken = "43699b41f94634fb18a1e43391787740";
-    console.log(accountSid, authToken);
+    const accountSid = process.env.TWILIO_ACCOUNT_SID;
+    const authToken = process.env.TWILIO_AUTH_TOKEN;
     const client = twilio(accountSid, authToken);
-    const vendorWhatsAppNumber = " +91 6377692127"; // Vendor's WhatsApp number
-    const twilioWhatsAppNumber = "+14155238886"; // Your Twilio WhatsApp sender number
+    const vendorWhatsAppNumber = "+916377692127"; // Vendor's WhatsApp number
+    const twilioWhatsAppNumber = "whatsapp:+14155238886"; // Your Twilio WhatsApp sender number
 
     try {
       const message = await client.messages.create({
         body: `Your appointment is coming up on July 21 at 3PM`,
-        from: "whatsapp:+14155238886",
-        to: "whatsapp:+916377692127",
+        from: twilioWhatsAppNumber,
+        to: `whatsapp:${vendorWhatsAppNumber}`,
       });
       console.log("WhatsApp message sent:", message.sid);
+    
     } catch (twilioError) {
       console.error("Error sending WhatsApp message:", twilioError.message);
     }
@@ -96,6 +94,8 @@ exports.paymentVerification = async (req, res, next) => {
       message: "Something went wrong",
       error: error.message,
     });
+  } finally {
+    res.redirect("https://shapier/thankyou");
   }
 };
 
