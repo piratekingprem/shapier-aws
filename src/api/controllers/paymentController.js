@@ -82,7 +82,7 @@ exports.paymentVerification = async (req, res, next) => {
         to: `whatsapp:${vendorWhatsAppNumber}`,
       });
       console.log("WhatsApp message sent:", message.sid);
-    
+      res.redirect("https://shapier/thankyou");
     } catch (twilioError) {
       console.error("Error sending WhatsApp message:", twilioError.message);
     }
@@ -95,7 +95,7 @@ exports.paymentVerification = async (req, res, next) => {
       error: error.message,
     });
   } finally {
-    res.redirect("https://shapier/thankyou");
+    
   }
 };
 
