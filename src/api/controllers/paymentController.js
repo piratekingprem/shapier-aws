@@ -2,12 +2,10 @@ const { mailoption, transporter } = require("../../config/smtp");
 const { instance } = require("../helpers/commonHelper");
 const paymentModel = require("../models/payment");
 const crypto = require("crypto");
-const accountSid = process.env.TWILIO_ACCOUNT_SID;
-const authToken = process.env.TWILIO_AUTH_TOKEN;
-const twilio = require('twilio');
-const client = twilio(accountSid, authToken);
 
-require('dotenv').config();
+const twilio = require("twilio");
+
+require("dotenv").config();
 
 exports.checkout = async (req, res, next) => {
   try {
@@ -73,8 +71,12 @@ exports.paymentVerification = async (req, res, next) => {
     await transporter.sendMail(mailoption);
 
     // WhatsApp Notification to Vendor
-    const vendorWhatsAppNumber = '+916377692127'; // Vendor's WhatsApp number
-    const twilioWhatsAppNumber = '+14155238886'; // Your Twilio WhatsApp sender number
+    const accountSid = process.env.TWILIO_ACCOUNT_SID;
+    const authToken = process.env.TWILIO_AUTH_TOKEN;
+    console.log(accountSid, authToken);
+    const client = twilio(accountSid, authToken);
+    const vendorWhatsAppNumber = "+916377692127"; // Vendor's WhatsApp number
+    const twilioWhatsAppNumber = "+14155238886"; // Your Twilio WhatsApp sender number
 
     try {
       const message = await client.messages.create({
@@ -82,9 +84,9 @@ exports.paymentVerification = async (req, res, next) => {
         to: `whatsapp:${vendorWhatsAppNumber}`,
         body: `New Order Created!\nOrder ID: ${razorpay_order_id}\nPayment ID: ${razorpay_payment_id}\nCustomer: ${req.body.billingInfo.firstName} ${req.body.billingInfo.lastName}\nAmount: ${req.body.amount} INR`,
       });
-      console.log('WhatsApp message sent:', message.sid);
+      console.log("WhatsApp message sent:", message.sid);
     } catch (twilioError) {
-      console.error('Error sending WhatsApp message:', twilioError.message);
+      console.error("Error sending WhatsApp message:", twilioError.message);
     }
 
     return res.status(200).json(userPayment);
