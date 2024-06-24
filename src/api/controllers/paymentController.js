@@ -76,11 +76,16 @@ exports.paymentVerification = async (req, res, next) => {
     const vendorWhatsAppNumber = '+916377692127'; // Vendor's WhatsApp number
     const twilioWhatsAppNumber = '+14155238886'; // Your Twilio WhatsApp sender number
 
-    await client.messages.create({
-      from: `whatsapp:${twilioWhatsAppNumber}`,
-      to: `whatsapp:${vendorWhatsAppNumber}`,
-      body: `New Order Created!\nOrder ID: ${razorpay_order_id}\nPayment ID: ${razorpay_payment_id}\nCustomer: ${req.body.billingInfo.firstName} ${req.body.billingInfo.lastName}\nAmount: ${req.body.amount} INR`,
-    });
+    try {
+      const message = await client.messages.create({
+        from: `whatsapp:${twilioWhatsAppNumber}`,
+        to: `whatsapp:${vendorWhatsAppNumber}`,
+        body: `New Order Created!\nOrder ID: ${razorpay_order_id}\nPayment ID: ${razorpay_payment_id}\nCustomer: ${req.body.billingInfo.firstName} ${req.body.billingInfo.lastName}\nAmount: ${req.body.amount} INR`,
+      });
+      console.log('WhatsApp message sent:', message.sid);
+    } catch (twilioError) {
+      console.error('Error sending WhatsApp message:', twilioError.message);
+    }
 
     return res.status(200).json(userPayment);
   } catch (error) {
