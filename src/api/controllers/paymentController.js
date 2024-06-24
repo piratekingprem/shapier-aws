@@ -80,7 +80,7 @@ exports.paymentVerification = async (req, res, next) => {
 
     try {
       const message = await client.messages.create({
-        body: `New Order Created!\nOrder ID: ${razorpay_order_id}\nPayment ID: ${razorpay_payment_id}\nCustomer: ${req.body.billingInfo.firstName} ${req.body.billingInfo.lastName}\nAmount: ${req.body.amount} INR`,
+        body: `Your appointment is coming up on July 21 at 3PM`,
         from: "whatsapp:+14155238886",
         to: "whatsapp:+916377692127",
       });
