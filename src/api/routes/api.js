@@ -19,12 +19,15 @@ const subCategories = require("../controllers/subCategories");
 const service = require("../controllers/service");
 const request_service = require("../controllers/request_service");
 const banner = require("../controllers/banners");
+const banner_for_other = require('../controllers/banners_for_others');
 const zip_check = require("../controllers/zip_check");
 const seller = require("../controllers/seller");
 const search = require("../controllers/search");
+
 // APP_VALIDATION
 const userValidation = require("../validations/usersValidation");
-const passport = require("passport");
+
+// const passport = require("passport");
 
 // TEST API
 router.get("/test", test.get_test);
@@ -56,6 +59,7 @@ router.delete("/product/:id", product.delete_product);
 
 // SEARCH
 router.get("/search", search.search_products);
+
 // PRODUCT_CATEGORIES API
 router.get("/product_categories", product_category.get_product_categories);
 router.get("/product_categories/:id",product_category.get_product_category_by_id);
@@ -89,6 +93,7 @@ router.post("/paymentverification", paymentCheckout.paymentVerification);
 router.get("/getSecreat", paymentCheckout.getPayment);
 router.get("/order", paymentCheckout.get_order);
 
+// Banners_for_other
 // router.get(
 //   "/auth/google",
 //   passport.authenticate("google", { scope: ["email", "profile"] })
@@ -124,6 +129,12 @@ router.post("/banner", upload.single("banner_image"), banner.store_banners);
 router.get("/banner", banner.get_banners);
 router.get("/banner/:banner_category", banner.get_banners_by_banner_category);
 router.get("/banner/:id", banner.get_banners_by_id);
+
+// BANNERS_FOR_OTHERS
+router.post('/banners_for_banner',upload.single("banner_image"),banner_for_other.store_banners);
+router.get('/banners_for_banner',banner_for_other.get_banners);
+router.get("/banners_for_banner/:banner_category", banner_for_other.get_banners_by_banner_category);
+router.get('/banners_for_banner/:id',banner_for_other.get_banners_by_id);
 
 // ZIPS
 router.post("/zip-check", zip_check.store_zip);
