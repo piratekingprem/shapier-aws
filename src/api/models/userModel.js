@@ -8,7 +8,6 @@ exports.get_users = async () => {
         const users = await db.query(
             `SELECT * FROM user ORDER BY created_at DESC`, [0]
         );
-
         message = "No users found", code = 404, data = [];
         if (users.length) {
             message = "User list fetched successfully";
@@ -85,7 +84,7 @@ exports.update = async (id,params) => {
     let message = "Something went wrong", code = 500, data = [];
     try {
         const result = await db.query(
-            `UPDATE user SET username = ?, email = ?,mobile = ? WHERE id = ?`,[params.username,params.email,params.mobile]
+            `UPDATE user SET username = ?, email = ?,mobile = ? WHERE id = ?`,[params.username,params.email,params.mobile,id]
         )
         message = "Error in updating user",code = 404,data = [];
         if(result.affectedRows){

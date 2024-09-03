@@ -10,7 +10,7 @@ exports.store = async (params) => {
     const paymentMode = params.paymentMode;
     const gst_no = params.gst_no ?? null;
     const productIds = params.productIds;
-    console.log("params",params)
+   
     for (let productId of productIds) {
       await db.query(
         `INSERT INTO orders_product (order_id, product_id) VALUES (?, ?)`,
@@ -36,10 +36,10 @@ exports.store = async (params) => {
         gst_no,
       ]
     );
-    (message = "Error in creating the product brand"),
+    (message = "Error in creating the order"),
       (code = 400),
       (data = []);
-    if (product_brand.affectedRows) {
+    if (orders.affectedRows) {
       message = "order creted successfully";
       code = 201;
       data = orders;
@@ -58,7 +58,7 @@ exports.get = async () => {
     const order = await db.query(
       `SELECT 
         o.*,
-        GROUP_CONCAT(p.product SEPARATOR ', ') AS product_names
+        GROUP_CONCAT(p.product_name SEPARATOR ', ') AS product_names
       FROM 
         orders o
       JOIN 

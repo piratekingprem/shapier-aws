@@ -6,7 +6,7 @@ exports.store_banners = async (req,res,next) => {
         return res.send(banner);
     } catch (error) {
         next(error);
-    }
+    }   
 }
 
 exports.get_banners = async (req,res,next) => {
