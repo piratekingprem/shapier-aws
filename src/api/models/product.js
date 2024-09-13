@@ -37,7 +37,7 @@ exports.store_product = async (file, params) => {
         sale_price,
         minimum_qauntity,
         params.per_base,
-        brand_id
+        brand_id,
       ]
     );
 
@@ -64,7 +64,13 @@ exports.get_product = async () => {
   try {
     const product = await db.query(
       `
-            SELECT product.*, subcategories.subcategory_name, product_brands.product_brand_name from product
+            SELECT product.*, 
+            subcategories.subcategory_name, 
+            product_brands.product_brand_name, 
+            GROUP_CONCAT(DISTINCT pi.image_url) AS ImageURLs
+            from product
+            LEFT JOIN 
+              product_image pi ON product.id = pi.product_id
             LEFT JOIN subcategories ON product.subcategory_id = subcategories.subcategory_id 
             LEFT JOIN product_brands ON product.brand_id = product_brands.id
             ORDER BY product.created_at DESC`,
@@ -82,7 +88,6 @@ exports.get_product = async () => {
 
   return { message, code, data };
 };
-
 
 exports.get_product_by_id = async (id) => {
   let message = "Something went wrong",
@@ -128,8 +133,8 @@ exports.get_product_by_subcategory_id = async (subcategory_id) => {
 
 exports.get_product_by_brands = async (brand_id) => {
   let message = "Something went wrong",
-  code = 500,
-  data = [];
+    code = 500,
+    data = [];
   try {
     const product = await db.query(
       `  SELECT product.*, subcategories.subcategory_name, product_brands.product_brand_name from product
@@ -149,8 +154,8 @@ exports.get_product_by_brands = async (brand_id) => {
     message = error;
   }
 
-  return {message,code,data}
-}
+  return { message, code, data };
+};
 exports.update_product = async (id, file, params) => {
   let message = "Something went wrong",
     code = 500,

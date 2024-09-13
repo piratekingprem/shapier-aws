@@ -44,7 +44,7 @@ exports.get_product = async (req, res, next) => {
 };
 exports.update_product = async (req,res,next)=>{
   try {
-    const product = await products.update_product(req.params.id,req.body);
+    const product = await products.update_product(req.params.id,req.file,req.body);
     return res.send(product);
   }
   catch (error) {

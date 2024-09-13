@@ -55,7 +55,7 @@ router.get("/product/:id", product.get_product_id);
 router.get("/product/subcategory_id/:subcategory_id",product.get_subcategory_id);
 router.get("/product/brands/:brand_id", product.get_product_by_brand_id);
 router.post("/product", upload.single("product_image"), product.store_product);
-router.put("/product/:id", product.update_product);
+router.put("/product/:id",upload.single("product_image"), product.update_product);
 router.delete("/product/:id", product.delete_product);
 
 // product_image_api
